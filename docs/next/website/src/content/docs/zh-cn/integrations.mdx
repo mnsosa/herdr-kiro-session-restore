@@ -201,6 +201,20 @@ Herdr 默认使用 `~/.kimi-code`,设置了 `KIMI_CODE_HOME` 时使用后者。K
 
 Herdr 用 `kimi --session <id>` 恢复保存的 Kimi 会话。
 
+## Kiro CLI
+
+安装 Kiro CLI 钩子:
+
+```bash
+herdr integration install kiro
+```
+
+该钩子会在会话启动、提交提示词和轮次完成时上报 Kiro 的当前会话身份。Kiro 的生命周期状态仍由 Herdr 的屏幕清单检测提供。Kiro 目前是实验性的 CLI 专用集成：可以通过 `herdr integration` 安装、卸载和查看状态，但不会出现在 Settings 或第一代集成 API 中。
+
+Herdr 默认使用 `~/.kiro`，设置了 `KIRO_HOME` 时使用后者。Kiro 配置目录必须已经存在。安装会写入 Herdr 管理的 `hooks/herdr-agent-session.sh` 和 `hooks/herdr-agent-session.json`，不会修改相邻的其他钩子。卸载只删除这两个文件。该集成支持 Linux 和 macOS，并且需要 `python3`。
+
+Herdr 会在保存的窗格目录中通过 `kiro-cli chat --resume-id <id>` 恢复 Kiro 会话。
+
 ## Droid
 
 安装 Droid 钩子:

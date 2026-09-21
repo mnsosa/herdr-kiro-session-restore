@@ -201,6 +201,20 @@ Herdr はデフォルトで `~/.kimi-code` を使い、`KIMI_CODE_HOME` が設�
 
 Herdr は保存された Kimi セッションを `kimi --session <id>` で resume します。
 
+## Kiro CLI
+
+Kiro CLI フックをインストールします:
+
+```bash
+herdr integration install kiro
+```
+
+このフックは、セッション開始、プロンプト送信、ターン完了時に Kiro のアクティブなセッション識別情報を報告します。Kiro のライフサイクル状態は引き続き Herdr のスクリーンマニフェスト検出から取得されます。Kiro は現在、CLI 専用の実験的インテグレーションです。インストール、アンインストール、状態確認は `herdr integration` から利用できますが、Settings や generation-1 integration API には表示されません。
+
+Herdr はデフォルトで `~/.kiro` を使い、`KIRO_HOME` が設定されていればそちらを使います。Kiro の設定ディレクトリはあらかじめ存在している必要があります。インストールは、隣接するフックを変更せずに Herdr 管理の `hooks/herdr-agent-session.sh` と `hooks/herdr-agent-session.json` を書き込みます。アンインストールはこの 2 ファイルだけを削除します。このインテグレーションは Linux と macOS で利用でき、`python3` が必要です。
+
+Herdr は保存されたペインディレクトリで `kiro-cli chat --resume-id <id>` を実行して、Kiro セッションを resume します。
+
 ## Droid
 
 Droid フックをインストールします:

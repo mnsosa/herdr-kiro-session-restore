@@ -234,6 +234,7 @@ const LETTA_INTEGRATION_VERSION: u32 = 1;
 const LETTA_HOOK_TIMEOUT_MS: u64 = 10_000;
 const KIRO_HOOK_INSTALL_NAME: &str = "herdr-agent-session.sh";
 const KIRO_HOOK_CONFIG_INSTALL_NAME: &str = "herdr-agent-session.json";
+#[cfg(not(windows))]
 const KIRO_HOOK_ASSET: &str = include_str!("assets/kiro/herdr-agent-session.sh");
 const KIRO_INTEGRATION_VERSION: u32 = 1;
 const QODERCLI_REMOVED_LIFECYCLE_HOOK_EVENTS: [(&str, &str); 12] = [
