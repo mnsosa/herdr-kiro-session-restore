@@ -1,5 +1,7 @@
 # herdr
 
+> **Kiro session restore fork.** This repository carries an experimental, CLI-only integration that restores Kiro CLI conversations after a Herdr or machine restart. See [`KIRO_SESSION_RESTORE.md`](KIRO_SESSION_RESTORE.md). The upstream project remains [herdrdev/herdr](https://github.com/herdrdev/herdr).
+
 
 <p align="center">
   <img src="assets/logo.png" alt="herdr" width="100" />

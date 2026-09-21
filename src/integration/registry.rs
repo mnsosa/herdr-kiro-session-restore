@@ -363,41 +363,50 @@ fn integration_specs() -> [(
     ]
 }
 
-pub(crate) fn integration_update_instructions(
-    targets: &[crate::api::schema::IntegrationTarget],
-) -> String {
-    let commands: Vec<String> = targets
-        .iter()
-        .map(|target| {
-            format!(
-                "`herdr integration install {}`",
-                integration_target_label(*target)
-            )
-        })
-        .collect();
-
-    match commands.as_slice() {
-        [] => String::new(),
-        [command] => format!("run {command}"),
-        [rest @ .., last] => format!("run {} and {last}", rest.join(", ")),
-    }
-}
-
 pub(crate) fn print_outdated_update_notice() -> bool {
     let outdated = outdated_installed_integrations();
-    if outdated.is_empty() {
+    let mut commands = outdated
+        .iter()
+        .map(|integration| {
+            format!(
+                "herdr integration install {}",
+                integration_target_label(integration.target)
+            )
+        })
+        .collect::<Vec<_>>();
+    for status in [
+        experimental_letta_integration_status(),
+        experimental_kiro_integration_status(),
+    ]
+    .into_iter()
+    .flatten()
+    {
+        if status.state == super::IntegrationStatusKind::Outdated {
+            commands.push(format!("herdr integration install {}", status.label));
+        }
+    }
+    if commands.is_empty() {
         return false;
     }
 
-    let targets = outdated
-        .iter()
-        .map(|integration| integration.target)
-        .collect::<Vec<_>>();
-    eprintln!(
-        "installed herdr integrations need updating; {}.",
-        integration_update_instructions(&targets).replace('`', "")
-    );
+    let instructions = match commands.as_slice() {
+        [command] => format!("run {command}"),
+        [rest @ .., last] => format!("run {} and {last}", rest.join(", ")),
+        [] => unreachable!("empty commands returned above"),
+    };
+    eprintln!("installed herdr integrations need updating; {instructions}.");
     true
+}
+
+fn kiro_hook_config_is_valid(hook_path: &Path) -> bool {
+    let Some(hooks_dir) = hook_path.parent() else {
+        return false;
+    };
+    let config_path = hooks_dir.join(super::KIRO_HOOK_CONFIG_INSTALL_NAME);
+    fs::read_to_string(config_path)
+        .ok()
+        .and_then(|content| serde_json::from_str::<serde_json::Value>(&content).ok())
+        .is_some_and(|config| config == super::targets::kiro_hook_config(hook_path))
 }
 
 /// Whether the Herdr-owned Grok hook config exactly matches the installed
@@ -512,6 +521,29 @@ pub(crate) fn experimental_letta_integration_status() -> Option<super::Experimen
         state,
         installed_version,
         expected_version: super::LETTA_INTEGRATION_VERSION,
+    })
+}
+
+pub(crate) fn experimental_kiro_integration_status() -> Option<super::ExperimentalIntegrationStatus>
+{
+    if cfg!(windows) {
+        return None;
+    }
+    let path = kiro_dir()
+        .ok()?
+        .join("hooks")
+        .join(super::KIRO_HOOK_INSTALL_NAME);
+    let (mut state, installed_version) =
+        integration_state_for_path(&path, super::KIRO_INTEGRATION_VERSION);
+    if state == super::IntegrationStatusKind::Current && !kiro_hook_config_is_valid(&path) {
+        state = super::IntegrationStatusKind::Outdated;
+    }
+    Some(super::ExperimentalIntegrationStatus {
+        label: "kiro",
+        path,
+        state,
+        installed_version,
+        expected_version: super::KIRO_INTEGRATION_VERSION,
     })
 }
 

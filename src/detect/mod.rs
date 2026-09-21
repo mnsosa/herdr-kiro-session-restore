@@ -341,6 +341,7 @@ pub(crate) fn session_identity_only_integration(source: &str, agent_label: &str)
         (source, agent_label),
         ("herdr:hermes", "hermes")
             | ("herdr:qwen", "qwen")
+            | ("herdr:kiro", "kiro")
             | ("herdr:letta", "letta")
             | ("herdr:antigravity_cli", "agy")
     )

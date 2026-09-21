@@ -1349,6 +1349,7 @@ impl TerminalState {
                     "qwen",
                     Some("startup" | "clear" | "resume" | "compact" | "branch")
                 )
+                | ("herdr:kiro", "kiro", None)
                 | ("herdr:antigravity_cli", "agy", None)
         )
     }

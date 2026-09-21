@@ -83,6 +83,20 @@ pub(crate) struct LettaInstallPaths {
 }
 
 #[derive(Debug)]
+pub(crate) struct KiroInstallPaths {
+    pub hook_path: PathBuf,
+    pub config_path: PathBuf,
+}
+
+#[derive(Debug)]
+pub(crate) struct KiroUninstallResult {
+    pub hook_path: PathBuf,
+    pub config_path: PathBuf,
+    pub removed_hook_file: bool,
+    pub removed_config_file: bool,
+}
+
+#[derive(Debug)]
 pub(crate) struct CursorInstallPaths {
     pub hook_path: PathBuf,
     pub hooks_path: PathBuf,

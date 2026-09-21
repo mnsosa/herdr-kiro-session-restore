@@ -161,6 +161,14 @@ pub fn plan(source: &str, agent: &str, session_ref: &AgentSessionRef) -> Option<
         ("herdr:kimi", "kimi", AgentSessionRefKind::Id) => {
             vec!["kimi".into(), "--session".into(), session_ref.value.clone()]
         }
+        ("herdr:kiro", "kiro", AgentSessionRefKind::Id) => {
+            vec![
+                "kiro-cli".into(),
+                "chat".into(),
+                "--resume-id".into(),
+                session_ref.value.clone(),
+            ]
+        }
         ("herdr:mastracode", "mastracode", AgentSessionRefKind::Id) => {
             vec![
                 "mastracode".into(),
@@ -271,6 +279,7 @@ pub(crate) fn is_official_agent_source(source: &str, agent: &str) -> bool {
             | ("herdr:devin", "devin")
             | ("herdr:droid", "droid")
             | ("herdr:kimi", "kimi")
+            | ("herdr:kiro", "kiro")
             | ("herdr:omp", "omp")
             | ("herdr:mastracode", "mastracode")
             | ("herdr:pi", "pi")
